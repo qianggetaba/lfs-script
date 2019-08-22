@@ -183,6 +183,6 @@ else
 fi
 
 continue 'copy lfs_tools.sh to /home/lfs'
-sudo cp lfs_tools.sh /home/lfs/
+sudo cp lfs_tools.sh /home/lfs/lfs_tools.sh && sudo chown lfs:lfs /home/lfs/lfs_tools.sh
 
 echo 'run "su - lfs" switch to lfs, run lfs_tools.sh'
