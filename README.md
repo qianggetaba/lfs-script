@@ -30,3 +30,8 @@ if in chroot need recompile tools
 1. sudo chown -R -v lfs $LFS/tools # run as normal user with sudo permission, note: echo echo "LFS:$LFS"
 2. su - lfs  # then make and install
 3. sudo chown -R -v root $LFS/tools # back to chown to root
+
+
+inchroot, after install glic and start agjust tool chain, the gcc specs error
+/tools/lib/gcc/x86_64-pc-linux-gnu/8.2.0/specs # could delete and rerun gcc -dumpspecs |sed -e ...>specs command
+

@@ -116,9 +116,11 @@ mkdir -pv /var/cache/nscd
 mkdir -pv /usr/lib/locale
 localedef -i POSIX -f UTF-8 C.UTF-8 2> /dev/null || true
 localedef -i en_US -f UTF-8 en_US.UTF-8
-localedef -i zh_CN -f GB18030 zh_CN.GB18030
+# localedef -i zh_CN -f GB18030 zh_CN.GB18030
+localedef -i zh_CN -f UTF-8 zh_CN.UTF-8
 
-make localedata/install-locales
+# install all locale
+# make localedata/install-locales
 
 cat > /etc/nsswitch.conf << "EOF"
 # Begin /etc/nsswitch.conf
@@ -180,7 +182,7 @@ mv -v /tools/$(uname -m)-pc-linux-gnu/bin/{ld,ld-old}
 mv -v /tools/bin/{ld-new,ld}
 ln -sv /tools/bin/ld /tools/$(uname -m)-pc-linux-gnu/bin/ld
 
-gcc -dumpspecs |head -1|sed -e 's@/tools@@g'                   \
+gcc -dumpspecs |sed -e 's@/tools@@g'                   \
     -e '/\*startfile_prefix_spec:/{n;s@.*@/usr/lib/ @}' \
     -e '/\*cpp:/{n;s@$@ -isystem /usr/include@}' >      \
     `dirname $(gcc --print-libgcc-file-name)`/specs
@@ -208,7 +210,7 @@ continue 'check output'
 
 grep found dummy.log
 echo 'should output:found ld-linux-x86-64.so.2 at /lib/ld-linux-x86-64.so.2'
-continue 'check output'
+continue 'check output:important'
 
 rm -v dummy.c a.out dummy.log
 
