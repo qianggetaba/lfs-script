@@ -24,3 +24,9 @@ sudo chroot "$LFS" /tools/bin/env -i \
 ```
 
 after into chroot, first run inchroot.sh, then inchroot2.sh
+
+
+if in chroot need recompile tools
+1. sudo chown -R -v lfs $LFS/tools # run as normal user with sudo permission, note: echo echo "LFS:$LFS"
+2. su - lfs  # then make and install
+3. sudo chown -R -v root $LFS/tools # back to chown to root
