@@ -210,7 +210,34 @@ DISTRIB_CODENAME="mylfs"
 DISTRIB_DESCRIPTION="Linux From Scratch"
 EOF
 
-# in archlinux normal user
+# run in archlinux normal user
 sudo os-prober  # output:Linux From Scratch (8.4)
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+sudo grub-mkconfig -o /boot/grub/grub.cfg # if not find in above command, it will not appear in grub
 
+exit 0
+# grub.cfg,generate by os-prober in archlinux, lsblk -fs, find the partition uuid
+
+menuentry 'Linux From Scratch (8.4) (on /dev/sda2)' --class linuxfromscratch --class gnu-linux --class gnu --class os $menuentry_id_option 'osprober-gnulinux-simple-6bca68fb-1855-4135-9a6e-fbe942dc1586' {
+        insmod part_msdos
+        insmod ext2
+        set root='hd0,msdos2'
+        if [ x$feature_platform_search_hint = xy ]; then
+          search --no-floppy --fs-uuid --set=root --hint-ieee1275='ieee1275//disk@0,msdos2' --hint-bios=hd0,msdos2 --hint-efi=hd0,msdos2 --hint-baremetal=ahci0,msdos2  6bca68fb-1855-4135-9a6e-fbe942dc1586
+        else
+          search --no-floppy --fs-uuid --set=root 6bca68fb-1855-4135-9a6e-fbe942dc1586
+        fi
+        linux /boot/vmlinuz-4.20.12-lfs-8.4 root=/dev/sda2
+}
+submenu 'Advanced options for Linux From Scratch (8.4) (on /dev/sda2)' $menuentry_id_option 'osprober-gnulinux-advanced-6bca68fb-1855-4135-9a6e-fbe942dc1586' {
+        menuentry 'Linux From Scratch (8.4) (on /dev/sda2)' --class gnu-linux --class gnu --class os $menuentry_id_option 'osprober-gnulinux-/boot/vmlinuz-4.20.12-lfs-8.4--6bca68fb-1855-4135-9a6e-fbe942dc1586' {
+                insmod part_msdos
+                insmod ext2
+                set root='hd0,msdos2'
+                if [ x$feature_platform_search_hint = xy ]; then
+                  search --no-floppy --fs-uuid --set=root --hint-ieee1275='ieee1275//disk@0,msdos2' --hint-bios=hd0,msdos2 --hint-efi=hd0,msdos2 --hint-baremetal=ahci0,msdos2  6bca68fb-1855-4135-9a6e-fbe942dc1586
+                else
+                  search --no-floppy --fs-uuid --set=root 6bca68fb-1855-4135-9a6e-fbe942dc1586
+                fi
+                linux /boot/vmlinuz-4.20.12-lfs-8.4 root=/dev/sda2
+        }
+}
