@@ -1,0 +1,13 @@
+xorg_(){
+enter_pkg 
+
+./configure $XORG_CONFIG
+make -j$(nproc)
+make install
+
+exit_pkg
+echo ${FUNCNAME[0]} >>$statusFile  
+}
+pkg=
+continue $pkg
+check_status xorg_$pkg "skip $pkg"
