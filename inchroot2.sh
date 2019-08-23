@@ -1557,8 +1557,8 @@ pkg=sysvinit
 continue $pkg
 check_status inchroot_$pkg "skip $pkg"
 
-inchroot_udev(){
-    enter_pkg udev-lfs-20171102.tar.bz2
+inchroot_eudev(){
+    enter_pkg eudev-3.2.7.tar.gz
 cat > config.cache << "EOF"
 HAVE_BLKID=1
 BLKID_LIBS="-lblkid"
@@ -1589,7 +1589,7 @@ exit_pkg
 echo ${FUNCNAME[0]} >>$statusFile  
 }
 
-pkg=udev
+pkg=eudev
 continue $pkg
 check_status inchroot_$pkg "skip $pkg"
 
