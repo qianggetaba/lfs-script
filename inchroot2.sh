@@ -1230,7 +1230,7 @@ check_status inchroot_$pkg "skip $pkg"
 
 inchroot_groff(){
     enter_pkg groff-1.22.4.tar.gz
-PAGE=<paper_size> ./configure --prefix=/usr
+PAGE=A4 ./configure --prefix=/usr
 make -j1
 make install
 
