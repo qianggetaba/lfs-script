@@ -640,6 +640,10 @@ pkg=findutils
 continue $pkg
 check_status tools_$pkg "skip $pkg"
 
+pkg=gawk
+continue $pkg
+check_status tools_$pkg "skip $pkg"
+
 pkg=grep
 continue $pkg
 check_status tools_$pkg "skip $pkg"
