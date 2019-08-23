@@ -1365,7 +1365,7 @@ continue $pkg
 check_status inchroot_$pkg "skip $pkg"
 
 inchroot_mandb(){
-    enter_pkg 
+    enter_pkg man-db-2.8.5.tar.xz
 ./configure --prefix=/usr                        \
             --docdir=/usr/share/doc/man-db-2.8.5 \
             --sysconfdir=/etc                    \
