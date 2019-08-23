@@ -1592,3 +1592,7 @@ echo ${FUNCNAME[0]} >>$statusFile
 pkg=udev
 continue $pkg
 check_status inchroot_$pkg "skip $pkg"
+
+continue 'done all install'
+rm -rf /tmp/*
+logout
