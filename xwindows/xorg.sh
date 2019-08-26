@@ -487,9 +487,9 @@ do
   pushd $packagedir
     ./configure $XORG_CONFIG
     make
-    as_root make install
+    make install
   popd
-  as_root rm -rf $packagedir
+  rm -rf $packagedir
 done
 
 install -v -d -m755 /usr/share/fonts
