@@ -427,7 +427,7 @@ do
 
      ./configure $XORG_CONFIG
      make
-     as_root make install
+     make install
   popd
   rm -rf $packagedir
 done

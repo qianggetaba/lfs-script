@@ -27,6 +27,8 @@ sudo chroot "$LFS" /usr/bin/env -i          \
     /bin/bash --login
 
 
+echo 'xorg_prepare'>>/sources/xc/status.done
+
 mesa configure error, gcc: error: unrecognized command line option '-qversion'
 
 
