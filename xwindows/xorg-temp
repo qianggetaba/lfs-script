@@ -11,3 +11,34 @@ echo ${FUNCNAME[0]} >>$statusFile
 pkg=
 continue $pkg
 check_status xorg_$pkg "skip $pkg"
+
+
+LFS=/mnt/lfs
+sudo mount -v -t ext4 /dev/sda2 $LFS
+
+sudo cp -r lfs/blfs-8.4/xorg $LFS/sources/xc
+
+sudo cp proj/lfs-script/xwindows/xorg.sh /tools
+
+sudo chroot "$LFS" /usr/bin/env -i          \
+    HOME=/root TERM="$TERM"            \
+    PS1='(lfs chroot) \u:\w\$ '        \
+    PATH=/bin:/usr/bin:/sbin:/usr/sbin \
+    /bin/bash --login
+
+
+mesa configure error, gcc: error: unrecognized command line option '-qversion'
+
+
+https://ftp.gnu.org/gnu/wget/wget-1.20.1.tar.gz
+cd /sources/xc
+tar xf wget-1.20.1.tar.gz
+pushd wget-1.20.1
+
+./configure --prefix=/usr      \
+            --sysconfdir=/etc  \
+            --with-ssl=openssl
+make -j$(nproc)
+make install
+
+popd

@@ -1,5 +1,12 @@
 #!/bin/bash -e
 
+if [ "$(whoami)" != "root" ]; then
+        echo "Script must be run as user: root"
+        exit -1
+fi
+
+statusFile=status.done
+
 continue(){
 read -p "$1 continue?(n for stop):" yn
 case $yn in
@@ -31,23 +38,22 @@ exit_pkg(){
     tail -1 $statusFile
 }
 
-cd /sources
-
-mkdir xc
-cd xc
-
+cd /sources/xc
 
 export XORG_PREFIX=/usr
 export XORG_CONFIG="--prefix=$XORG_PREFIX --sysconfdir=/etc \
     --localstatedir=/var --disable-static"
 
 xorg_prepare(){
+mkdir /etc/profile.d
 cat > /etc/profile.d/xorg.sh << EOF
 XORG_PREFIX="$XORG_PREFIX"
 XORG_CONFIG="--prefix=\$XORG_PREFIX --sysconfdir=/etc --localstatedir=/var --disable-static"
 export XORG_PREFIX XORG_CONFIG
 EOF
 chmod 644 /etc/profile.d/xorg.sh
+
+echo ${FUNCNAME[0]} >>$statusFile  
 }
 
 pkg=prepare
@@ -180,7 +186,7 @@ d2f1f0ec68ac3932dd7f1d9aa0a7a11c  libdmx-1.1.4.tar.bz2
 4a4cfeaf24dab1b991903455d6d7d404  libxkbfile-1.0.9.tar.bz2
 42dda8016943dc12aff2c03a036e0937  libxshmfence-1.3.tar.bz2
 EOF
-mkdir lib &&
+mkdir -p lib &&
 cd lib &&
 grep -v '^#' ../lib-7.md5 | awk '{print $2}' | wget -i- -c \
     -B https://www.x.org/pub/individual/lib/ &&
@@ -353,7 +359,7 @@ pkg=xbitmaps
 continue $pkg
 check_status xorg_$pkg "skip $pkg"
 
-xorg_xorg_app(){
+xorg_dl_xorg_app(){
 cat > app-7.md5 << "EOF"
 3b9b79fa0f9928161f4bad94273de7ae  iceauth-1.0.8.tar.bz2
 c4a3664e08e5a47c120ff9263ee2f20c  luit-1.1.1.tar.bz2
@@ -393,11 +399,20 @@ c56fa4adbeed1ee5173f464a4c4a61a6  xrefresh-1.0.6.tar.bz2
 9a505b91ae7160bbdec360968d060c83  xwininfo-1.1.4.tar.bz2
 79972093bb0766fcd0223b2bd6d11932  xwud-1.0.5.tar.bz2
 EOF
-mkdir app &&
+mkdir -p app &&
 cd app &&
 grep -v '^#' ../app-7.md5 | awk '{print $2}' | wget -i- -c \
     -B https://www.x.org/pub/individual/app/ &&
 md5sum -c ../app-7.md5
+
+echo ${FUNCNAME[0]} >>$statusFile  
+}
+pkg=dl_xorg_app
+continue $pkg
+check_status xorg_$pkg "skip $pkg"
+
+xorg_xorg_app(){
+pushd app
 
 for package in $(grep -v '^#' ../app-7.md5 | awk '{print $2}')
 do
@@ -417,6 +432,7 @@ do
   rm -rf $packagedir
 done
 
+popd
 echo ${FUNCNAME[0]} >>$statusFile  
 }
 pkg=xorg_app
@@ -437,7 +453,7 @@ pkg=xcursor_theme
 continue $pkg
 check_status xorg_$pkg "skip $pkg"
 
-xorg_xorg_font(){
+xorg_dl_xorg_font(){
 cat > font-7.md5 << "EOF"
 23756dab809f9ec5011bb27fb2c3c7d6  font-util-1.3.1.tar.bz2
 0f2d6546d514c5cc4ecf78a60657a5c1  encodings-1.0.4.tar.bz2
@@ -449,11 +465,20 @@ bfb2593d2102585f45daa960f43cb3c4  font-ibm-type1-1.0.3.tar.bz2
 6306c808f7d7e7d660dfb3859f9091d2  font-misc-ethiopic-1.0.3.tar.bz2
 3eeb3fb44690b477d510bbd8f86cf5aa  font-xfree86-type1-1.0.4.tar.bz2
 EOF
-mkdir font &&
+mkdir -p font &&
 cd font &&
 grep -v '^#' ../font-7.md5 | awk '{print $2}' | wget -i- -c \
     -B https://www.x.org/pub/individual/font/ &&
 md5sum -c ../font-7.md5
+
+echo ${FUNCNAME[0]} >>$statusFile  
+}
+pkg=dl_xorg_font
+continue $pkg
+check_status xorg_$pkg "skip $pkg"
+
+xorg_xorg_font(){
+pushd font
 
 for package in $(grep -v '^#' ../font-7.md5 | awk '{print $2}')
 do
@@ -471,6 +496,7 @@ install -v -d -m755 /usr/share/fonts
 ln -svfn $XORG_PREFIX/share/fonts/X11/OTF /usr/share/fonts/X11-OTF
 ln -svfn $XORG_PREFIX/share/fonts/X11/TTF /usr/share/fonts/X11-TTF
 
+popd
 echo ${FUNCNAME[0]} >>$statusFile  
 }
 pkg=xorg_font
